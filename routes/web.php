@@ -11,6 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'LandingController@index')->name('landing');
+Route::get('/admin_home', 'AdminHomeController@index')->name('admin_home');
+
+Route::get('/login_admin', 'AdminAuthController@displayLoginPage')->name('login_admin');
+
+Route::post('/enter_admin', 'AdminAuthController@login')->name('enter_admin');
+Route::post('/logout_admin', 'AdminAuthController@logout')->name('logout_admin');
+
+Route::resource('topics', 'TopicsController');
+Route::resource('admins', 'AdminsController');
