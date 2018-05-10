@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Topics;
+use App\Topic as Topic;
 use Illuminate\Http\Request;
 
 class TopicsController extends Controller
@@ -20,7 +20,11 @@ class TopicsController extends Controller
 
     public function index()
     {
-        return view('adminTopics');
+        $topics = Topic::all();
+        
+        //dd($topics);
+        
+        return view('adminTopics')->with(['topics' => $topics]);
     }
 
     /**
