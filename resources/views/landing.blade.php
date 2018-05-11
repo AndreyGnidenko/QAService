@@ -41,7 +41,7 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
 
-                    <li><a class="nav-link" href="{{ route('login_admin') }}">{{ __('Login') }}</a></li>
+                    <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
 
                 </ul>
             </div>

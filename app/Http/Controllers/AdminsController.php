@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Admin as Admin;
 
 class AdminsController extends Controller
 {
@@ -19,7 +20,9 @@ class AdminsController extends Controller
 
     public function index()
     {
-        return view('adminAdmins');
+        $admins = Admin::all();
+
+        return view('adminAdmins')->with(['admins' => $admins]);
     }
 
     /**

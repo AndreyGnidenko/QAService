@@ -34,7 +34,7 @@ class TopicsController extends Controller
      */
     public function create()
     {
-        //
+        return view('adminTopicDetails');
     }
 
     /**
@@ -43,18 +43,20 @@ class TopicsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTopic $request)
     {
-        //
+        Topic::create($request->all());
+
+        return redirect()->route('topics.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Topics  $topics
+     * @param  \App\Topic  $topics
      * @return \Illuminate\Http\Response
      */
-    public function show(Topics $topics)
+    public function show(Topic $topics)
     {
         //
     }
@@ -62,10 +64,10 @@ class TopicsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Topics  $topics
+     * @param  \App\Topic  $topic
      * @return \Illuminate\Http\Response
      */
-    public function edit(Topics $topics)
+    public function edit(Topic $topic)
     {
         //
     }
@@ -77,7 +79,7 @@ class TopicsController extends Controller
      * @param  \App\Topics  $topics
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Topics $topics)
+    public function update(Request $request, Topic $topic)
     {
         //
     }
@@ -85,11 +87,12 @@ class TopicsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Topics  $topics
+     * @param  \App\Topic  $topics
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Topics $topics)
+    public function destroy(Topic $topic)
     {
-        //
+        $topic->delete();
+        return redirect()->route('topics.index');
     }
 }
