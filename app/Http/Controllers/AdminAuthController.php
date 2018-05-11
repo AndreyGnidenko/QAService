@@ -26,7 +26,10 @@ class AdminAuthController extends Controller
         $creds = $request->only('login', 'password');
         if (Auth::guard()->attempt($creds, $request->filled('remember')))
         {
-            $request->session()->regenerate();
+            //$user = Auth::user()->login;
+            //dd($user);
+            
+            //$request->session()->regenerate();
             return redirect()->route('admin_home');
         }
         return $this->sendFailedLoginResponse($request);

@@ -3,7 +3,7 @@
 @section('content')
     @if (count($topics) > 0)
         <table name="Topics" class="table table-dark">
-            <thead class=="thead-dark">
+            <thead class="thead-dark">
                 <tr>
                         <th scope="row">Name</th>
                         <th scope="row">Total questions</th>
@@ -30,7 +30,7 @@
                             </td>
                         </form>
 
-                        <form id="delete_form" method="POST" action="{{ url('/topics', $topic->id) }}", style="display: none;">-->
+                        <form id="delete_form" method="POST" action="{{ url('/topics', $topic->id) }}", style="display: none;">
 
                             @csrf
                             {{ method_field('DELETE') }}
