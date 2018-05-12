@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Admin as Admin;
 
 class AdminsController extends Controller
@@ -43,7 +45,21 @@ class AdminsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'login' => 'required|unique:admins',
+            'password' => 'required|string|min:5|confirmed'
+        ]);
+
+        if ($validator->fails()) {
+
+            return redirect()->route('admins.create')->withErrors($validator);
+        }
+
+        $admin = new Admin;
+        $admin->fill(['login' => $request->login, 'password' => Hash::make($request->password) ]);
+        $admin->save();
+
+        return redirect()->route('admins.index');
     }
 
     /**
@@ -65,7 +81,11 @@ class AdminsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $admins = Admin::all();
+
+        $editedAdmin = Admin::find($id);
+
+        return view('adminAdmins')->with(['admins' => $admins, 'editedAdmin' => $editedAdmin]);
     }
 
     /**
@@ -77,7 +97,26 @@ class AdminsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $admin = Admin::find($id);
+        if (!(Hash::check($request->get('current-password'), $admin->password)))
+        {
+            return redirect()->route('admins.edit', $id)->withErrors("Your current password does not match the password you provided. Please try again.");
+        }
+
+        $validator = Validator::make($request->all(), [
+            'current-password' => 'required',
+            'new-password' => 'required|string|min:5|confirmed'
+        ]);
+
+        if ($validator->fails()) {
+
+            return redirect()->route('admins.edit', $id)->withErrors($validator);
+        }
+
+        $admin->password = Hash::make($request->get('new-password'));
+        $admin->save();
+
+        return redirect()->route('admins.index');
     }
 
     /**
@@ -88,6 +127,7 @@ class AdminsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Admin::destroy($id);
+        return redirect()->route('admins.index');
     }
 }
