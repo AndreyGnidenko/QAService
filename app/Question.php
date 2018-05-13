@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Question extends Model
 {
-    protected $fillable = ['text', 'is_hidden'];
+    protected $fillable = ['question_text', 'is_hidden', 'topic_id', 'author_name', 'author_email'];
     
     public function topic()
     {
@@ -20,9 +20,7 @@ class Question extends Model
     
     public function answer()
     {
-        return $this->hasOne('App\Answer')->withDefault([
-            'answer_text' => null
-        ]);
+        return $this->hasOne('App\Answer');
     }
 
     //

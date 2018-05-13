@@ -28,16 +28,6 @@ class AdminsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -52,7 +42,7 @@ class AdminsController extends Controller
 
         if ($validator->fails()) {
 
-            return redirect()->route('admins.create')->withErrors($validator);
+            return redirect()->route('admins.index')->withErrors($validator);
         }
 
         $admin = new Admin;
@@ -60,17 +50,6 @@ class AdminsController extends Controller
         $admin->save();
 
         return redirect()->route('admins.index');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -100,7 +79,7 @@ class AdminsController extends Controller
         $admin = Admin::find($id);
         if (!(Hash::check($request->get('current-password'), $admin->password)))
         {
-            return redirect()->route('admins.edit', $id)->withErrors("Your current password does not match the password you provided. Please try again.");
+            return redirect()->route('admins.index')->withErrors("Your current password does not match the password you provided. Please try again.");
         }
 
         $validator = Validator::make($request->all(), [

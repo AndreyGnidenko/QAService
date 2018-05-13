@@ -1,49 +1,26 @@
 @extends('adminMaster')
 
+@section('header')
+    <h1 style="text-indent: 25px">QA service administrators</h1>
+@endsection
+
 @section('content')
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.14.0/jquery.validate.min.js"></script>
-
-    <h1>QA service administrators</h1>
-
-    <!--
-
-    <script>
-
-        $(function() {
-
-            $(".myclass").validate({
-                rules: {
-                    password: {
-                        required: true,
-                        minlength: 4
-                    },
-                    action: "required"
-                },
-                messages: {
-                    password: {
-                        required: "Please enter some data",
-                        minlength: "Your data must be at least 4 characters"
-                    },
-                    action: "Please provide some data"
-                }
-            });
-        });
-
-    </script>
-
-    -->
-    
-   <!--<div class="container">-->
-        <ul class="list-group">
+       <ul class="list-group">
 
             @foreach ($admins as $admin)
-                <li class="list-group-item list-group-item-success">{{ $admin->login }}<span class="float-right button-group">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal_{{$admin->id}}"><span class="glyphicon glyphicon-edit"></span> Change password</button>
+                <li class="list-group-item list-group-item-success">{{ $admin->login }}
+                    <span class="float-right button-group">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal_{{$admin->id}}">
+                        <span class="glyphicon glyphicon-edit"></span> Change password</button>
 
                      @if (Auth::user()->id != $admin->id)
 
-                     {{ Form::open(['route' => ['admins.destroy', $admin->id], 'style' => 'display:inline' ] ) }}
+                     @php
+                        $confirmText = "return confirm('Are you sure you want to delete ".$admin->login."?');";
+                     @endphp
+
+                     {{ Form::open(['route' => ['admins.destroy', $admin->id], 'style' => 'display:inline', 'onsubmit' => $confirmText] ) }}
 
                         {{ method_field('DELETE') }}
 
@@ -157,8 +134,8 @@
         </div>
     </div>
 
+    <br/>
+
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newModal">New administrator<span class="glyphicon glyphicon-new"></span></button>
-
-
 
 @endsection

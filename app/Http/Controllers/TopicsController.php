@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Topic as Topic;
 use Illuminate\Http\Request;
+use Validator;
 
 class TopicsController extends Controller
 {
@@ -21,8 +22,6 @@ class TopicsController extends Controller
     public function index()
     {
         $topics = Topic::all();
-        
-        //dd($topics);
         
         return view('adminTopics')->with(['topics' => $topics]);
     }
@@ -43,22 +42,20 @@ class TopicsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTopic $request)
+    public function store(Request $request)
     {
-        Topic::create($request->all());
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:topics',
+        ]);
 
-        return redirect()->route('topics.index');
-    }
+        if ($validator->fails()) {
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Topic  $topics
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Topic $topics)
-    {
-        //
+            return redirect()->route('topics.index')->withErrors($validator);
+        }
+
+        $newTopic = Topic::create($request->all());
+
+        return redirect()->route('questions.index', ['topic' => $newTopic]);
     }
 
     /**
@@ -69,7 +66,7 @@ class TopicsController extends Controller
      */
     public function edit(Topic $topic)
     {
-        //
+        return redirect()->route('questions.index', ['topic' => $topic]);
     }
 
     /**

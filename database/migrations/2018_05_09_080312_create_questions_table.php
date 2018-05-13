@@ -21,10 +21,11 @@ class CreateQuestionsTable extends Migration
 
             $table->increments('id');
             $table->integer('topic_id')->unsigned();
-            $table->dateTime('created_at');
-            $table->boolean('is_hidden');
-            $table->string('author_name');
-            $table->string('author_email');
+            $table->timestamps();
+            $table->boolean('is_hidden')->default(false);
+            $table->text('question_text');
+            $table->string('author_name')->nullable()->default(null);
+            $table->string('author_email')->nullable()->default(null);
 
             $table->foreign('topic_id')->references('id')->on('topics')->onDelete('cascade')->onUpdate('cascade');
         });

@@ -20,6 +20,7 @@ class CreateAnswersTable extends Migration
             $table->collation = 'utf8_unicode_ci';
 
             $table->increments('id');
+            $table->timestamps();
 
             $table->integer('question_id')->unsigned();
             $table->text('answer_text')->nullable();

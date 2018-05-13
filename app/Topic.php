@@ -23,14 +23,19 @@ class Topic extends Model
     {
         return $this->questions()->count();
     }
+
+    public function hiddenCount ()
+    {
+        return $this->answers()->where('is_hidden', true)->count();
+    }
     
     public function answeredCount ()
     {
-        return $this->answers()->count();
+        return $this->questions()->where('is_hidden', false)->has('answer')->count();
     }
     
     public function unAnsweredCount ()
     {
-        return $this->answers()->count();
+        return $this->questions()->where('is_hidden', false)->doesntHave('answer')->count();
     }
 }
