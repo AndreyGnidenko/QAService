@@ -11,10 +11,18 @@
     <title>Question answer service</title>
 
     <!-- Scripts -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{{ asset('js/questions.js') }}" defer />
+
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" defer></script>-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.14.0/jquery.validate.min.js"></script>
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>-->
+
+    <link href="{{ asset('css/reset.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('css/questionStyles.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -60,6 +68,10 @@
 
                                 <a class="dropdown-item" href="{{ route('admins.index') }}">
                                     {{ __('Administrators') }}
+                                </a>
+
+                                <a class="dropdown-item" href="{{ route('questions.unanswered') }}">
+                                    {{ __('Unanswered questions') }}
                                 </a>
 
                                 <a class="dropdown-item" href="{{ route('logout_admin') }}"

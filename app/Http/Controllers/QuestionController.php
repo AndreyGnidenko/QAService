@@ -54,10 +54,10 @@ class QuestionController extends Controller
             return redirect()->route('questions.index', ['topicId' => $topicId])->withErrors($validator);
         }
 
-        $questionValues = $request->all();
-        $questionValues['is_hidden'] = false;
+        $questionParams = $request->all();
+        $questionParams['is_hidden'] = $request->has('is_hidden');
 
-        $newQuestion = Question::create($questionValues);
+        $newQuestion = Question::create($questionParams);
         return redirect()->route('questions.index', ['topicId' => $topicId]);
     }
 
@@ -67,9 +67,11 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function indexUnanswered()
     {
-        //
+        $questions = Question::doesntHave('answer')->get();
+
+        return view('adminUnansweredQuestions')->with(['questions' => $questions]);
     }
 
     /**
