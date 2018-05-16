@@ -29,8 +29,6 @@ class AdminAuthController extends Controller
             return redirect()->route('topics.index');
         }
         return $this->sendFailedLoginResponse($request);
-
-        //return redirect()->route('login_admin')->withErrors(['login' => Lang::get('auth.failed')]);
     }
 
     public function logout()

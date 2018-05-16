@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use \App\Topic;
 
 class Question extends Model
 {
@@ -10,7 +11,7 @@ class Question extends Model
     
     public function topic()
     {
-        return $this->belongsTo('Topic');
+        return $this->belongsTo('App\Topic');
     }
     
     public function answered()

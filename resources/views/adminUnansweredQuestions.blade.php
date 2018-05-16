@@ -33,64 +33,71 @@
 
     </script>
 
-    <div class="cd-faq-items">
-        <ul id="questions" class="cd-faq-group">
+    @foreach ($topics as $topic)
+    
+        <h3>{{$topic->name}}</h3>
+    
+        <div class="cd-faq-items">
+            <ul id="questions" class="cd-faq-group">
 
-            @foreach ($questions as $question)
-                <li>
-                    <a class="cd-faq-trigger" style="text-decoration: {{ $question->is_hidden ? 'line-through' : 'none' }} " href="#0">{{$question->question_text}}
-                    </a>
+                @foreach ($topic->questions as $question)
+                    <li>
+                        
+                        <a class="cd-faq-trigger" style="text-decoration: {{ $question->is_hidden ? 'line-through' : 'none' }} " href="#0">{{$question->question_text}}
+                        </a>
 
-                    <div class="cd-faq-content">
+                        <div class="cd-faq-content">
 
-                        <b>Answer: </b>{{ $question->answer->answer_text or null }}
+                            <b>Answer: </b>{{ $question->answer->answer_text or null }}
 
-                        <ul>
-                            <li><b>Author: </b> {{$question->author_name}}</li>
-                            <li><b>Author EMail: </b> {{$question->author_email}}<li/>
-                        </ul>
+                            <ul>
+                                <li><b>Author: </b> {{$question->author_name}}</li>
+                                <li><b>Author EMail: </b> {{$question->author_email}}<li/>
+                            </ul>
 
-                        <br/>
+                            <br/>
 
-                        <button type="button" class="btn btn-primary question-button" data-toggle="modal"
-                                data-target="#editQuestionModal"
-                                data-question-id="{{ $question->id }}"
-                                data-topic-id="{{ $question->topic_id }}"
-                                data-question-text="{{ $question->question_text}}"
-                                data-author-name="{{ $question->author_name}}"
-                                data-author-email="{{ $question->author_email}}"
-                                data-is-hidden="{{ $question->is_hidden}}"
-                        >Edit
-                            <span class="glyphicon glyphicon-new"></span>
-                        </button>
+                            <button type="button" class="btn btn-primary question-button" data-toggle="modal"
+                                    data-target="#editQuestionModal"
+                                    data-question-id="{{ $question->id }}"
+                                    data-topic-id="{{ $question->topic_id }}"
+                                    data-question-text="{{ $question->question_text}}"
+                                    data-author-name="{{ $question->author_name}}"
+                                    data-author-email="{{ $question->author_email}}"
+                                    data-is-hidden="{{ $question->is_hidden}}"
+                            >Edit
+                                <span class="glyphicon glyphicon-new"></span>
+                            </button>
 
-                        <button type="button" class="btn btn-primary answer-button" data-question-id="{{$question->id}}" data-answer-text="{{$question->answer->answer_text or null}}" data-toggle="modal" data-target="#answerModal">
-                            @if (isset($question->answer->answer_text))
-                                Edit answer
-                            @else
-                                Post answer
-                            @endif
-                            <span class="glyphicon glyphicon-new"></span>
-                        </button>
+                            <button type="button" class="btn btn-primary answer-button" data-question-id="{{$question->id}}" data-answer-text="{{$question->answer->answer_text or null}}" data-toggle="modal" data-target="#answerModal">
+                                @if (isset($question->answer->answer_text))
+                                    Edit answer
+                                @else
+                                    Post answer
+                                @endif
+                                <span class="glyphicon glyphicon-new"></span>
+                            </button>
 
-                        {{ Form::open(['route' => ['questions.destroy', $question->id], 'style' => 'display:inline'])}}
+                            {{ Form::open(['route' => ['questions.destroy', $question->id], 'style' => 'display:inline'])}}
 
-                        @csrf
-                        {{ method_field('DELETE') }}
+                            @csrf
+                            {{ method_field('DELETE') }}
 
-                        <input type="hidden" name="topic_id" value="{{$question->topic_id}}"/>
-                        <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete</button>
+                            <input type="hidden" name="topic_id" value="{{$question->topic_id}}"/>
+                            <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete</button>
 
-                        {{ Form::close() }}
+                            {{ Form::close() }}
 
 
-                    </div>
-                </li>
+                        </div>
+                    </li>
 
-            @endforeach
-        </ul> <!-- cd-faq-group -->
-    </div>
-
+                @endforeach
+            </ul> <!-- cd-faq-group -->
+        </div>
+        
+    @endforeach
+        
     <div class="modal fade in" id="answerModal" role="dialog">
         <div class="modal-dialog">
 

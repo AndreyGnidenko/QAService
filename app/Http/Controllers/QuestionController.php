@@ -28,7 +28,7 @@ class QuestionController extends Controller
         $topic = Topic::find($topicId);
         $questions = Question::where('topic_id', $topicId)->get();
 
-        $question = Question::where('topic_id', $topicId)->first();
+        //$question = Question::where('topic_id', $topicId)->first();
 
         //dd($questions);
 
@@ -69,9 +69,27 @@ class QuestionController extends Controller
      */
     public function indexUnanswered()
     {
-        $questions = Question::doesntHave('answer')->get();
+        //$topics = Topic::all()->wherequestions()->where('is_hidden', false)->doesntHave('answer');
+        
+        $topics = DB::table('topics')->join('questions', 'topics.id', '=', 'questions.topic_id')
+        {
+            $question->doesntHave('answer');
+        })->get();
+        
+        /*
+        $topics = Topic::with('questions')->whereHas('questions', function($question)
+        {
+            $question->doesntHave('answer');
+        })->get();
+        */
+        
+        //$questions = Question::doesntHave('answer')->with('topic')->orderBy('topic_id')->orderBy('created_at')->get();
+        
+        //dd($topics);
 
-        return view('adminUnansweredQuestions')->with(['questions' => $questions]);
+        //return view('adminUnansweredQuestions')->with(['questions' => $questions]);
+        
+        return view('adminUnansweredQuestions')->with(['topics' => $topics]);
     }
 
     /**
@@ -91,8 +109,10 @@ class QuestionController extends Controller
 
         $question = Question::find($questionId);
         $question->update($questionParams);
+        
+        return redirect()->back();
 
-        return redirect()->route('questions.index', ['topicId' => $topicId]);
+        //return redirect()->route('questions.index', ['topicId' => $topicId]);
     }
 
     public function answer(Request $request)
@@ -103,7 +123,7 @@ class QuestionController extends Controller
         $answer->answer_text = $request->answer_text;
         $answer->save();
 
-        return redirect()->route('questions.index', ['topicId' => $topicId]);
+        return redirect()->back();
     }
 
     /**
@@ -117,6 +137,7 @@ class QuestionController extends Controller
         $topicId = $request->topic_id;
 
         Question::destroy($id);
-        return redirect()->route('questions.index', ['topicId' => $topicId]);
+        
+        return redirect()->back();
     }
 }

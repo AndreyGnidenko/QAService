@@ -11,6 +11,12 @@
 |
 */
 
+/*
+Event::listen('Illuminate\Database\Events\QueryExecuted', function ($query) 
+{
+   echo $query->sql.'<br/>'; 
+});*/
+
 Route::get('/', 'LandingController@index')->name('landing');
 
 Route::get('/login_admin', 'AdminAuthController@displayLoginPage')->name('login');
