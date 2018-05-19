@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class LandingController extends Controller
+class GuestController extends Controller
 {
     public function __construct()
     {
@@ -13,6 +13,6 @@ class LandingController extends Controller
 
     public function index(Request $request)
     {
-        return view('landing');
+        return redirect()->route('questions.faq');
     }
 }

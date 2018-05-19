@@ -1,4 +1,4 @@
-@extends('adminMaster')
+@extends('admin.master')
 
 @section('header')
     <h1 style="text-indent: 25px">QA service administrators</h1>

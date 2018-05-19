@@ -23,7 +23,7 @@ class TopicsController extends Controller
     {
         $topics = Topic::all();
         
-        return view('adminTopics')->with(['topics' => $topics]);
+        return view('admin.topics')->with(['topics' => $topics]);
     }
 
     /**
@@ -33,7 +33,7 @@ class TopicsController extends Controller
      */
     public function create()
     {
-        return view('adminTopicDetails');
+        return view('admin.topicDetails');
     }
 
     /**
@@ -55,7 +55,7 @@ class TopicsController extends Controller
 
         $newTopic = Topic::create($request->all());
 
-        return redirect()->route('questions.index', ['topic' => $newTopic]);
+        return redirect()->route('topicquestions.index', ['topic' => $newTopic]);
     }
 
     /**
@@ -66,7 +66,7 @@ class TopicsController extends Controller
      */
     public function edit(Topic $topic)
     {
-        return redirect()->route('questions.index', ['topic' => $topic]);
+        return redirect()->route('topicquestions.index', ['topic' => $topic]);
     }
 
     /**

@@ -23,14 +23,24 @@
 
 <body>
 
+@if ($errors->any())
+    <div class="alert alert-danger">
+
+        @foreach ($errors->all() as $error)
+            {{ $error }}
+        @endforeach
+
+    </div>
+@endif
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+                <div class="card-header">{{ __('Login as administrator') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('enter_admin') }}">
+                    <form method="POST" action="{{ route('enter_admin') }}" style="display:inline">
                         @csrf
 
                         <div class="form-group row">
@@ -76,7 +86,7 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Login') }}
                                 </button>
-
+                                <a class="btn btn-primary" href="{{ route('guest') }}">{{ __('Back') }}</a>
                             </div>
                         </div>
                     </form>

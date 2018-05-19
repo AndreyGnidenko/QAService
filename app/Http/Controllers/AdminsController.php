@@ -24,7 +24,7 @@ class AdminsController extends Controller
     {
         $admins = Admin::all();
 
-        return view('adminAdmins')->with(['admins' => $admins]);
+        return view('admin.admins')->with(['admins' => $admins]);
     }
 
     /**
@@ -64,7 +64,7 @@ class AdminsController extends Controller
 
         $editedAdmin = Admin::find($id);
 
-        return view('adminAdmins')->with(['admins' => $admins, 'editedAdmin' => $editedAdmin]);
+        return view('admin.admins')->with(['admins' => $admins, 'editedAdmin' => $editedAdmin]);
     }
 
     /**

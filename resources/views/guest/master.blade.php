@@ -11,7 +11,18 @@
     <title>Question answer service</title>
 
     <!-- Scripts -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/questions.js') }}" defer />
+
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" defer></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.14.0/jquery.validate.min.js"></script>
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>-->
+
+    <link href="{{ asset('css/reset.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('css/questionStyles.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -20,6 +31,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
+
 <body>
 <div id="app">
     <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
@@ -41,16 +53,23 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
 
-                    <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
+                    <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login as administrator') }}</a></li>
 
                 </ul>
             </div>
         </div>
     </nav>
 
+    @yield('header')
+
+    @include('shared.viewErrors')
+
     <main class="py-4">
         @yield('content')
     </main>
+
+    @yield('footer')
+
 </div>
 </body>
 </html>

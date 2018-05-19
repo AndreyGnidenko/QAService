@@ -1,4 +1,4 @@
-@extends('adminMaster')
+@extends('admin.master')
 
 @section('header')
     <br/>
@@ -71,12 +71,12 @@
                         <span class="glyphicon glyphicon-new"></span>
                         </button>
 
-                        {{ Form::open(['route' => ['questions.destroy', $question->id], 'style' => 'display:inline'])}}
+                        {{ Form::open(['route' => ['topicquestions.destroy', $topic->id], 'style' => 'display:inline'])}}
 
                         @csrf
                         {{ method_field('DELETE') }}
 
-                        <input type="hidden" name="topic_id" value="{{$topic->id}}"/>
+                        <input type="hidden" name="question_id" value="{{$question->id}}"/>
                         <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete</button>
 
                         {{ Form::close() }}
@@ -100,7 +100,7 @@
 
                 <div class="modal-body">
 
-                    {{ Form::open(['route' => ['questions.answer'], 'method' => 'PUT', 'id' => 'answerForm' ] ) }}
+                    {{ Form::open(['route' => ['topicquestions.answer', $topic->id], 'method' => 'PUT', 'id' => 'answerForm' ] ) }}
 
                     <div class="col-md-9">
                         <label for="name" class="control-label">Post your answer</label>
@@ -114,7 +114,6 @@
                     </div>
 
                     <input type="hidden" name="question_id" value=""/>
-                    <input type="hidden" name="topic_id" value="{{$topic->id}}"/>
 
                     {{ Form::close() }}
 
@@ -122,56 +121,6 @@
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success" form="answerForm">Post</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="modal fade in" id="newQuestionModal" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New question</h4>
-                </div>
-
-                <div class="modal-body">
-
-                    {{ Form::open(['route' => ['questions.store'], 'method' => 'POST', 'id' => 'newQuestionForm' ] ) }}
-
-                    <div class="col-md-9">
-                        <label for="name" class="control-label">New question text</label>
-                        <div>
-                            <div class="form-group">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-                                <textarea rows="5" cols="60" id="question_text" name="question_text" placeholder="Question text"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-9">
-
-                        <label for="author_name" class="control-label">Author</label>
-                        <input type="text" name="author_name"  /><br/>
-                        <label for="author_email" class="control-label">Author E-Mail</label>
-                        <input type="email" name="author_email"/>
-                        <label for="is_hidden" class="control-label">Hidden</label>
-                        <input type="checkbox" name="is_hidden"/>
-
-                    </div>
-
-                    <input type="hidden" name="topic_id" value="{{$topic->id}}"/>
-
-                    {{ Form::close() }}
-
-                </div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" form="newQuestionForm">Post</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -190,7 +139,19 @@
 
                 <div class="modal-body">
 
-                    {{ Form::open(['route' => 'questions.update', 'method' => 'PUT', 'id' => 'editQuestionForm' ] ) }}
+                    {{ Form::open(['route' => ['topicquestions.update', $topic->id], 'method' => 'PUT', 'id' => 'editQuestionForm' ] ) }}
+
+                    <div class="col-md-9">
+                        <label for="topic">{{ __('Topic')}}</label>
+
+                        <select name="new_topic_id">
+                            <option disabled>Choose a topic ... </option>
+                            @foreach ($topics as $topicForSelect)
+                                <option value="{{$topicForSelect->id}}" {{ $topicForSelect->id == $topic->id ? 'selected' : '' }}  }} >{{$topicForSelect->name}}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
 
                     <div class="col-md-9">
                         <label for="name" class="control-label">Question text</label>
@@ -215,7 +176,7 @@
                     </div>
 
                     <input type="hidden" name="question_id" value=""/>
-                    <input type="hidden" name="topic_id" value="{{$topic->id}}"/>
+                    <input type="hidden" name="topic_id" value= "{{$topic->id}}"/>
 
                     {{ Form::close() }}
 
@@ -230,11 +191,7 @@
         </div>
     </div>
 
-
-
     <br/>
     <br/>
-
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newQuestionModal">New question<span class="glyphicon glyphicon-new"></span></button>
 
 @endsection

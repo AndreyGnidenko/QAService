@@ -51,41 +51,36 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
-                    @guest
-                    <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
-                    <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li>
-                    @else
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->login }} <span class="caret"></span>
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ Auth::user()->login }} <span class="caret"></span>
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                            <a class="dropdown-item" href="{{ route('topics.index') }}">
+                                {{ __('Topics') }}
                             </a>
 
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('admins.index') }}">
+                                {{ __('Administrators') }}
+                            </a>
 
-                                <a class="dropdown-item" href="{{ route('topics.index') }}">
-                                    {{ __('Topics') }}
-                                </a>
+                            <a class="dropdown-item" href="{{ route('questions.unanswered') }}">
+                                {{ __('Unanswered questions') }}
+                            </a>
 
-                                <a class="dropdown-item" href="{{ route('admins.index') }}">
-                                    {{ __('Administrators') }}
-                                </a>
+                            <a class="dropdown-item" href="{{ route('logout_admin') }}"
+                               onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
 
-                                <a class="dropdown-item" href="{{ route('questions.unanswered') }}">
-                                    {{ __('Unanswered questions') }}
-                                </a>
-
-                                <a class="dropdown-item" href="{{ route('logout_admin') }}"
-                                   onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
-                                </a>
-
-                                <form id="logout-form" action="{{ route('logout_admin') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                        @endguest
+                            <form id="logout-form" action="{{ route('logout_admin') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -93,15 +88,7 @@
 
     @yield('header')
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-
-            @foreach ($errors->all() as $error)
-                {{ $error }}
-            @endforeach
-
-        </div>
-    @endif
+    @include('shared.viewErrors')
 
     <main class="py-4">
         @yield('content')

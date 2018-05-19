@@ -1,7 +1,7 @@
-@extends('adminMaster')
+@extends('admin.master')
 
 @section('header')
-    <h1 style="text-indent: 25px">QA topics summary</h1>
+    <h1 style="text-indent: 25px">Question topics summary</h1>
 @endsection
 
 @section('content')

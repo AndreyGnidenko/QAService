@@ -7,6 +7,8 @@ use App\Question as Question;
 use App\Answer as Answer;
 use Illuminate\Http\Request;
 use Validator;
+use DB;
+use Event;
 
 class QuestionController extends Controller
 {
@@ -18,21 +20,76 @@ class QuestionController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except (['indexFaq', 'createFaq', 'storeFaq'] );
     }
 
-    public function index(Request $request)
+    public function indexByTopic(Request $request, $topicId)
     {
-        $topicId = $request->topicId;
+        $topics = Topic::all();
 
         $topic = Topic::find($topicId);
-        $questions = Question::where('topic_id', $topicId)->get();
+        $questions = $topic->questions()->get();
 
-        //$question = Question::where('topic_id', $topicId)->first();
+        return view('admin.topicDetails')->with(['topic' => $topic, 'questions' => $questions, 'topics' => $topics]);
+    }
 
-        //dd($questions);
+    public function indexFaq(Request $request)
+    {
+        $questions = Question::with('Topic')->where('is_hidden', false)->has('answer')->orderBy('created_at')->get();
 
-        return view('adminTopicDetails')->with(['topic' => $topic, 'questions' => $questions]);
+        $topics = array();
+
+        foreach ($questions as $question)
+        {
+            $topics[$question->topic->name][] = $question;
+        }
+
+        return view('guest.frequentQuestions')->with(['topics' => $topics]);
+    }
+
+    public function createFaq(Request $request)
+    {
+        $topics = Topic::all();
+
+        return view('guest.newQuestion')->with(['topics' => $topics]);
+    }
+
+    public function storeFaq(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'question_text' => 'required',
+            'author_name' => 'required',
+            'author_email' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+
+            return redirect()->route('questions.faq')->withErrors($validator);
+        }
+
+        $questionParams = $request->all();
+        $questionParams['is_hidden'] = $request->has('is_hidden');
+
+        $newQuestion = Question::create($questionParams);
+
+        return redirect()->route('questions.faq');
+    }
+
+
+    public function indexUnanswered()
+    {
+        $questions = Question::with('Topic')->where('is_hidden', false)->doesntHave('answer')->orderBy('created_at')->get();
+
+        $topics = array();
+
+        foreach ($questions as $question)
+        {
+            $topics[$question->topic->name][] = $question;
+        }
+
+        $allTopics = Topic::all();
+
+        return view('admin.unansweredQuestions')->with(['topics' => $topics, 'allTopics' => $allTopics]);
     }
 
     /**
@@ -41,103 +98,79 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $topicId = $request->topic_id;
 
+    public function update(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'question_text' => 'required',
+            'author_name' => 'required',
+            'author_email' => 'required',
         ]);
 
         if ($validator->fails()) {
 
-            return redirect()->route('questions.index', ['topicId' => $topicId])->withErrors($validator);
+            if (preg_match('/unanswered$/', $request->url()))
+            {
+                return redirect()->route('questions.unanswered')->withErrors($validator);
+            }
+
+            return redirect()->route('topicquestions.index', ['topicId' => $topicId])->withErrors($validator);
         }
 
-        $questionParams = $request->all();
-        $questionParams['is_hidden'] = $request->has('is_hidden');
-
-        $newQuestion = Question::create($questionParams);
-        return redirect()->route('questions.index', ['topicId' => $topicId]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function indexUnanswered()
-    {
-        //$topics = Topic::all()->wherequestions()->where('is_hidden', false)->doesntHave('answer');
-        
-        $topics = DB::table('topics')->join('questions', 'topics.id', '=', 'questions.topic_id')
-        {
-            $question->doesntHave('answer');
-        })->get();
-        
-        /*
-        $topics = Topic::with('questions')->whereHas('questions', function($question)
-        {
-            $question->doesntHave('answer');
-        })->get();
-        */
-        
-        //$questions = Question::doesntHave('answer')->with('topic')->orderBy('topic_id')->orderBy('created_at')->get();
-        
-        //dd($topics);
-
-        //return view('adminUnansweredQuestions')->with(['questions' => $questions]);
-        
-        return view('adminUnansweredQuestions')->with(['topics' => $topics]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
-    {
-        $topicId = $request->topic_id;
         $questionId = $request->question_id;
+        $topicId = $request->topic_id;
 
         $questionParams = $request->all();
         $questionParams['is_hidden'] = $request->has('is_hidden');
+        $questionParams['topic_id'] = $request->new_topic_id;
 
         $question = Question::find($questionId);
         $question->update($questionParams);
-        
-        return redirect()->back();
 
-        //return redirect()->route('questions.index', ['topicId' => $topicId]);
+        if (preg_match('/unanswered$/', $request->url()))
+        {
+            return redirect()->route('questions.unanswered', ['topicId' => $topicId]);
+        }
+        return redirect()->route('topicquestions.index', ['topicId' => $topicId]);
     }
 
-    public function answer(Request $request)
+    public function answer(Request $request, $topicId = null)
     {
-        $topicId = $request->topic_id;
+        $validator = Validator::make($request->all(), [
+            'answer_text' => 'required',
+        ]);
+
+        if ($validator->fails())
+        {
+            if (preg_match('/unanswered$/', $request->url()))
+            {
+                return redirect()->route('questions.unanswered')->withErrors($validator);
+            }
+
+            return redirect()->route('topicquestions.index', ['topicId' => $topicId])->withErrors($validator);
+        }
 
         $answer = Answer::firstOrNew(['question_id' => $request->question_id]);
         $answer->answer_text = $request->answer_text;
         $answer->save();
 
-        return redirect()->back();
+        if (preg_match('/unanswered/', $request->url()))
+        {
+            return redirect()->route('questions.unanswered');
+        }
+        return redirect()->route('topicquestions.index', ['topicId' => $topicId]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $topicId = null)
     {
-        $topicId = $request->topic_id;
+        $question_id = $request->question_id;
 
-        Question::destroy($id);
-        
-        return redirect()->back();
+        Question::destroy($question_id);
+
+        if (preg_match('/unanswered$/', $request->url()))
+        {
+            return redirect()->route('questions.unanswered');
+        }
+        return redirect()->route('topicquestions.index', ['topicId' => $topicId]);
     }
 }
