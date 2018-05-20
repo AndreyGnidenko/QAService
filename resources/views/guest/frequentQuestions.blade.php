@@ -12,4 +12,9 @@
 @section('footer')
 
     <a class="btn btn-primary" href="{{ route('questions.faqCreate') }}"> Ask a question</a>
+
+    <br/>
+    <br/>
+    <br/>
+
  @endsection('footer')
