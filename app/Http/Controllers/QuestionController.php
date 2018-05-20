@@ -44,7 +44,9 @@ class QuestionController extends Controller
             $topics[$question->topic->name][] = $question;
         }
 
-        return view('guest.frequentQuestions')->with(['topics' => $topics]);
+        $allTopics = Topic::all();
+
+        return view('guest.frequentQuestions')->with(['topics' => $topics, 'allTopics' => $allTopics]);
     }
 
     public function createFaq(Request $request)
