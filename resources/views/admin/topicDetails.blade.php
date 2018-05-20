@@ -42,9 +42,12 @@
 
                     <div class="cd-faq-content">
 
-                        <b>Answer: </b>{{ $question->answer->answer_text or null }}
+                        @if(isset($question->answer->answer_text ))
+                            <b>Answer: </b>{{ $question->answer->answer_text }}
+                        @endif
 
                         <ul>
+                            <li><b>Created at: </b> {{$question->created_at}}</li>
                             <li><b>Author: </b> {{$question->author_name}}</li>
                             <li><b>Author EMail: </b> {{$question->author_email}}<li/>
                         </ul>
