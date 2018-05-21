@@ -11,12 +11,6 @@
 |
 */
 
-/*
-Event::listen('Illuminate\Database\Events\QueryExecuted', function ($query) 
-{
-   echo $query->sql.'<br/>'; 
-});*/
-
 Route::get('/', 'GuestController@index')->name('guest');
 
 Route::get('/login_admin', 'AdminAuthController@displayLoginPage')->name('login');
@@ -39,9 +33,6 @@ Route::put('questions/unanswered', 'QuestionController@update')->name('questions
 Route::put('questions/unanswered/answer', 'QuestionController@answer')->name('questions.answer');
 Route::delete('questions/unanswered', 'QuestionController@destroy')->name('questions.destroy');
 
-//Route::post('questions', 'QuestionController@store')->name('questions.store');
-//Route::put('questions', 'QuestionController@indexByTopic')->name('topicquestions.index');
-
-Route::resource('topics', 'TopicsController', ['except' => ['create', 'show']]);
+Route::resource('topics', 'TopicsController', ['except' => ['create', 'show', 'update']]);
 Route::resource('admins', 'AdminsController', ['except' => ['create', 'show']]);
 

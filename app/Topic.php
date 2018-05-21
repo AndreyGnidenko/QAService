@@ -11,12 +11,12 @@ class Topic extends Model
     
     public function questions ()
     {
-        return $this->hasMany('App\Question');
+        return $this->hasMany(Question::class);
     }
     
     public function answers ()
     {
-        return $this->hasManyThrough('App\Answer', 'App\Question');
+        return $this->hasManyThrough(Answer::class, Question::class);
     }
     
     public function totalCount()

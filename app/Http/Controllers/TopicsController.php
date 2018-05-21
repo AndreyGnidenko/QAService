@@ -70,18 +70,6 @@ class TopicsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Topics  $topics
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Topic $topic)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Topic  $topics

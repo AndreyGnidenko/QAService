@@ -94,13 +94,6 @@ class QuestionController extends Controller
         return view('admin.unansweredQuestions')->with(['topics' => $topics, 'allTopics' => $allTopics]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -109,18 +102,18 @@ class QuestionController extends Controller
             'author_email' => 'required',
         ]);
 
+        $questionId = $request->question_id;
+        $topicId = $request->topic_id;
+
         if ($validator->fails()) {
 
-            if (preg_match('/unanswered$/', $request->url()))
+            if (false !== strpos($request->url(), 'unanswered'))
             {
                 return redirect()->route('questions.unanswered')->withErrors($validator);
             }
 
             return redirect()->route('topicquestions.index', ['topicId' => $topicId])->withErrors($validator);
         }
-
-        $questionId = $request->question_id;
-        $topicId = $request->topic_id;
 
         $questionParams = $request->all();
         $questionParams['is_hidden'] = $request->has('is_hidden');
@@ -129,7 +122,7 @@ class QuestionController extends Controller
         $question = Question::find($questionId);
         $question->update($questionParams);
 
-        if (preg_match('/unanswered$/', $request->url()))
+        if (false !== strpos($request->url(), 'unanswered'))
         {
             return redirect()->route('questions.unanswered', ['topicId' => $topicId]);
         }
@@ -144,7 +137,7 @@ class QuestionController extends Controller
 
         if ($validator->fails())
         {
-            if (preg_match('/unanswered$/', $request->url()))
+            if (false !== strpos($request->url(), 'unanswered'))
             {
                 return redirect()->route('questions.unanswered')->withErrors($validator);
             }
@@ -156,7 +149,7 @@ class QuestionController extends Controller
         $answer->answer_text = $request->answer_text;
         $answer->save();
 
-        if (preg_match('/unanswered/', $request->url()))
+        if (false !== strpos($request->url(), 'unanswered'))
         {
             return redirect()->route('questions.unanswered');
         }
@@ -169,7 +162,7 @@ class QuestionController extends Controller
 
         Question::destroy($question_id);
 
-        if (preg_match('/unanswered$/', $request->url()))
+        if (false !== strpos($request->url(), 'unanswered'))
         {
             return redirect()->route('questions.unanswered');
         }

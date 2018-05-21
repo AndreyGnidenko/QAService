@@ -11,17 +11,17 @@ class Question extends Model
     
     public function topic()
     {
-        return $this->belongsTo('App\Topic');
+        return $this->belongsTo(Topic::class);
     }
     
     public function answered()
     {
-        return $this->hasOne('App\Answer')->exists();
+        return $this->answer()->exists();
     }
     
     public function answer()
     {
-        return $this->hasOne('App\Answer');
+        return $this->hasOne(Answer::class);
     }
 
     //
