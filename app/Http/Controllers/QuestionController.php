@@ -41,12 +41,18 @@ class QuestionController extends Controller
 
         foreach ($questions as $question)
         {
-            $topics[$question->topic->name][] = $question;
+            $topics[$question->topic->id][] = $question;
         }
 
-        $allTopics = Topic::all();
-
-        return view('guest.frequentQuestions')->with(['topics' => $topics, 'allTopics' => $allTopics]);
+        $topicNames = array();
+        $topicRecords = Topic::all('id', 'name');
+        
+        foreach ($topicRecords as $topicRecord)
+        {
+            $topicNames[$topicRecord->id] = $topicRecord->name; 
+        }
+        
+        return view('guest.frequentQuestions')->with(['topics' => $topics, 'topicNames' => $topicNames]);
     }
 
     public function createFaq(Request $request)
@@ -86,12 +92,18 @@ class QuestionController extends Controller
 
         foreach ($questions as $question)
         {
-            $topics[$question->topic->name][] = $question;
+            $topics[$question->topic->id][] = $question;
         }
 
-        $allTopics = Topic::all();
-
-        return view('admin.unansweredQuestions')->with(['topics' => $topics, 'allTopics' => $allTopics]);
+        $topicNames = array();
+        $topicRecords = Topic::all('id', 'name');
+        
+        foreach ($topicRecords as $topicRecord)
+        {
+            $topicNames[$topicRecord->id] = $topicRecord->name; 
+        }
+        
+        return view('admin.unansweredQuestions')->with(['topics' => $topics, 'topicNames' => $topicNames]);
     }
 
     public function update(Request $request)

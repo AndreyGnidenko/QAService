@@ -23,9 +23,9 @@
 
 </script>
 
-@foreach ($topics as $topicName => $topicQuestions)
+@foreach ($topics as $topicId => $topicQuestions)
 
-    <h3 style="text-indent: 25px">{{$topicName}}</h3>
+    <h3 style="text-indent: 25px">{{$topicNames[$topicId]}}</h3>
 
     <div class="cd-faq-items">
         <ul id="questions" class="cd-faq-group">
@@ -149,8 +149,8 @@
 
                 <select name="new_topic_id">
                     <option disabled>Choose a topic ... </option>
-                    @foreach ($allTopics as $topicForSelect)
-                        <option value="{{$topicForSelect->id}}" >{{$topicForSelect->name}}</option>
+                    @foreach ($topicNames as $topicId => $topicName)
+                        <option value="{{$topicId}}" >{{$topicName}}</option>
                     @endforeach
                 </select>
 
